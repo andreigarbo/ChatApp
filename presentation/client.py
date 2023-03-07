@@ -6,7 +6,7 @@ def rgbtohex(r,g,b):
 root = Tk()
 root.title("ChatApp")
 root.config(bg=rgbtohex(53, 27, 61))
-root.geometry('743x345')
+root.geometry('743x370')
 root.resizable(0,0)
 
 #root.rowconfigure(0, weight=3)
@@ -29,10 +29,10 @@ message_screen.grid(row=0,column=1,stick='e')
 message_input=Entry(root,bg="white",width=100)
 message_input.grid(row=1,column=1, sticky='e')
 
-
 send_button=Button(root, bg="white",text="Send")
 send_button.grid(row=2,column=1,sticky='e')
 
-
+send_file=Button(root, bg="white", text="Select & send file")
+send_file.grid(row=3, column=1, sticky='e')
 
 root.mainloop()
