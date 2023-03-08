@@ -1,8 +1,9 @@
 
 class user:
-    def __init__(self, username, hashed_password):
+    def __init__(self, username, hashed_password,email):
         self.username = username
         self.hashed_password = hashed_password
+        self.email=email
         self.logged_on = False
 
 class message:

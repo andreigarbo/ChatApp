@@ -4,7 +4,7 @@ con = sl.connect('chatapp.db')
 
 with con:
     con.execute("""
-        CREATE TABLE user (
+        CREATE TABLE user(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             username TEXT,
             hashed_password INTEGER,
@@ -13,7 +13,7 @@ with con:
         );
     """)
     con.execute("""
-        CREATE TABLE message (
+        CREATE TABLE message(
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             receiver_id INTEGER REFERENCES user(id),
             sender_id INTEGER REFERENCES user(id),
