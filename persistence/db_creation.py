@@ -8,6 +8,7 @@ with con:
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             username TEXT,
             hashed_password INTEGER,
+            email TEXT,
             logged_on INTEGER
         );
     """)

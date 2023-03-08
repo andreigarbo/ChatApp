@@ -2,7 +2,7 @@ import sqlite3 as sl
 
 con = sl.connect('chatapp.db')
 
-add_user_statement = 'INSERT INTO user (username, hashed_password, logged_on) values(?,?,?)'
+add_user_statement = 'INSERT INTO user (username, hashed_password, email, logged_on) values(?,?,?,?)'
 get_user_online_status_by_username_statement = 'SELECT logged_on FROM user WHERE username = ?'
 add_message_statement = 'INSERT INTO message (receiver_id, sender_id, image_content, text_content) values (?,?,?,?)'
 get_user_messages_statement = 'SELECT * FROM message WHERE receiver_id = (SELECT username FROM user WHERE id = receiver_id) OR receiver_id = (SELECT username FROM user WHERE id = sender_id)'
