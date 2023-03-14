@@ -12,3 +12,9 @@ class message:
         self.sender_id = sender_id
         self.image_content = image_content
         self.text_content = text_content
+
+class request:
+    def __init__(self, type : str, body : list):
+        self.type = type
+        self.body = body
+        

@@ -1,4 +1,6 @@
 from tkinter import *
+import business.request_handler as req
+import business.models as ms
 
 def rgbtohex(r,g,b):
     return f'#{r:02x}{g:02x}{b:02x}'
@@ -30,7 +32,7 @@ email_text.grid(row=3,column=0)
 email_field=Entry(root,bg="white", width=30)
 email_field.grid(row=3,column=1,columnspan=2)
 
-create_account_button=Button(root,bg="white",text="Create account")
+create_account_button=Button(root,bg="white",text="Create account",command=lambda : req.request_decoder(ms.request('new-user', [username_field.get(),password_field.get(),email_field.get()])))
 create_account_button.grid(row=4,column=1, pady=10)
 
 root.mainloop()

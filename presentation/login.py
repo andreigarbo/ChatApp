@@ -1,4 +1,6 @@
 from tkinter import *
+import business.request_handler as req
+import business.models as ms
 
 def rgbtohex(r,g,b):
     return f'#{r:02x}{g:02x}{b:02x}'
@@ -24,7 +26,7 @@ password_text.grid(row=2,column=0)
 password_field=Entry(root,bg="white",width=25,show='*')
 password_field.grid(row=2,column=1,columnspan=2)
 
-login_button=Button(root,bg="white",text="Submit")
+login_button=Button(root,bg="white",text="Submit",command=lambda : req.request_decoder(ms.request('login', [username_field.get(), password_field.get()])))
 login_button.grid(row=3,column=1, pady=10)
 
 root.mainloop()
