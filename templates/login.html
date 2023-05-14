@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Login Page</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+	{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+			{% for category, message in messages %}
+				<div class="alert alert-{{ category }}">
+					{{ message }}
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+
+	<form method="POST" action="{{ url_for('login') }}">
+		<label for="username">Username:</label>
+		<input type="text" id="username" name="username" required>
+
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password" required>
+
+		<input type="submit" value="Login">
+	</form>
+
+</body>
+</html>

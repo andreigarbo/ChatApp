@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>ChatApp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main_view.css') }}">
+    <body>
+    <div class="container">
+      <div class="user-list">
+        <h1>Users</h1>
+        <ul>
+          {% for user in users %}
+            {% if user == active_user %}
+              <li class="user active">{{ user }}</li>
+            {% else %}
+              <li class="user"><a href="/chat/{{ user }}" onclick="event.preventDefault(); setActiveUser('{{ user }}');">{{ user }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+        <button class="logout-btn" onclick="location.href='/logout'">Log out</button>
+      </div>
+      <div class="chat-container">
+        <div class="chat-header">
+          <h1>Chat with {{ active_user }}</h1>
+        </div>
+        <div class="message-list">
+          {% for message in messages %}
+            {% if message.sender == active_user %}
+              <div class="message sent">
+            {% else %}
+              <div class="message received">
+            {% endif %}
+              <p>{{ message.content }}</p>
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+      <div class="chat-input">
+        <input type="text" id="message-input" placeholder="Type a message...">
+        <button id="send-btn">Send</button>
+      </div>
+    </div>
+
+    <script>
+      var activeUser = '{{ active_user }}';
+      var selectedUser = '';
+      function setActiveUser(user) {
+        selectedUser = user;
+        document.querySelector('.chat-header h1').innerText = `Chat with ${user}`;
+
+        fetch(`/load_messages/${user}`).then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to load messages');
+        }
+      }).then(data => {
+        const messageList = document.querySelector('.message-list');
+        messageList.innerHTML = '';
+
+        data.forEach(message => {
+          const messageDiv = document.createElement('div');
+          messageDiv.classList.add('message');
+          if (message[0] === user) {
+            messageDiv.classList.add('sent');
+            messageDiv.setAttribute('data-sender', 'You');
+          } else {
+            messageDiv.classList.add('received');
+            messageDiv.setAttribute('data-sender', message[0]);
+          }
+          const messageContent = document.createElement('p');
+          const sender = messageDiv.getAttribute('data-sender');
+          messageContent.innerText = sender + ': '  + message[1];
+          messageDiv.appendChild(messageContent);
+          messageList.appendChild(messageDiv);
+        });
+      }).catch(error => {
+        console.error(error);
+      });
+    }
+    const messageInput = document.getElementById('message-input');
+    const sendBtn = document.getElementById('send-btn');
+
+  function sendMessage() {
+  const message = messageInput.value;
+  if (message) {
+    const sendTo = document.querySelector('.user.active').innerText;
+
+    fetch(`/send-message/${activeUser}/${selectedUser}/${message}`, {
+      method: 'POST'
+    }).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Failed to send message');
+      }
+    }).then(data => {
+      fetch(`/load_messages/${selectedUser}`).then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to load messages');
+        }
+      }).then(data => {
+        const messageList = document.querySelector('.message-list');
+        messageList.innerHTML = '';
+
+        data.forEach(message => {
+          const messageDiv = document.createElement('div');
+          messageDiv.classList.add('message');
+          if (message[0] === activeUser) {
+            messageDiv.classList.add('sent');
+            messageDiv.setAttribute('data-sender', 'You');
+          } else {
+            messageDiv.classList.add('received');
+            messageDiv.setAttribute('data-sender', message[0]);
+          }
+          const messageContent = document.createElement('p');
+          const sender = messageDiv.getAttribute('data-sender');
+          messageContent.innerText = sender + ': '  + message[1];
+          messageDiv.appendChild(messageContent);
+          messageList.appendChild(messageDiv);
+        });
+      }).catch(error => {
+        console.error(error);
+      });
+    });
+
+    messageInput.value = '';
+  }
+}
+
+
+sendBtn.addEventListener('click', sendMessage);
+    </script>
+  </body>
+</html>

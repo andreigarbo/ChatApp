@@ -1,0 +1,14 @@
+message sent from user1 to user2: test from 1 to 2
+message sent from user2 to user1: test from 2 to 1
+message sent from user2 to user1: test from 2 to 1 2
+message sent from user2 to user1: test from 2 to 1 2
+message sent from user2 to user1: test from 2 to 1 2
+message sent from user1 to user2: test from 1 ro 2 1
+message sent from user1 to user2: test from 1 to 2 2 
+message sent from user1 to user2: test from 1 to 2 2 
+message sent from user1 to user2: test from 1 to 2 2 
+message sent from user1 to user2: from 1 to 2
+message sent from user1 to user2: from 1 to 2
+message sent from user2 to user1: test from 2 to 1
+message sent from user1 to user2: test from 1 to 2
+message sent from user2 to user1: response to test from 1 to 2

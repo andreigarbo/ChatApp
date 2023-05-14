@@ -1,0 +1,2 @@
+message sent from user1 to user2: hi user 2
+message sent from user2 to user1: hi user 1

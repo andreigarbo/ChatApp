@@ -1,0 +1,76 @@
+import React, { useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
+
+const AdminPage = () => {
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState('');
+
+  const handleDeleteClick = (user) => {
+    setSelectedUser(user);
+    setDeleteModalOpen(true);
+  };
+
+  const handleUpdateClick = (user) => {
+    setSelectedUser(user);
+    setUpdateModalOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    // code to delete user
+    setDeleteModalOpen(false);
+  };
+
+  const handleUpdateConfirm = () => {
+    // code to update user
+    setUpdateModalOpen(false);
+  };
+
+  return (
+    <div>
+      <h1>Admin Page</h1>
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>
+            {user.name}
+            <button onClick={() => handleDeleteClick(user)}>Delete</button>
+            <button onClick={() => handleUpdateClick(user)}>Update</button>
+          </li>
+        ))}
+      </ul>
+
+      <Dialog open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)}>
+        <DialogTitle>Delete User</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete {selectedUser.name}?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteModalOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="primary" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={updateModalOpen} onClose={() => setUpdateModalOpen(false)}>
+        <DialogTitle>Update User</DialogTitle>
+        <DialogContent>
+          <TextField label="Name" defaultValue={selectedUser.name} fullWidth />
+          <TextField label="Email" defaultValue={selectedUser.email} fullWidth />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setUpdateModalOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateConfirm} color="primary" autoFocus>
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+};
+
+export default AdminPage;

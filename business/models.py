@@ -11,7 +11,7 @@ class message:
         self.receiver_id = receiver_id
         self.sender_id = sender_id
         self.image_content = image_content
-        self.text_content = text_content
+        self.text_content = text_content        
 
 class request:
     def __init__(self, type : str, body : list):

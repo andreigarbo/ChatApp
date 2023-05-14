@@ -1,0 +1,14 @@
+message sent from 10 to 11: test from 1 to 2
+message sent from 11 to 10: test from 2 to 1
+message sent from 11 to 10: test from 2 to 1 2
+message sent from 11 to 10: test from 2 to 1 2
+message sent from 11 to 10: test from 2 to 1 2
+message sent from 10 to 11: test from 1 ro 2 1
+message sent from 10 to 11: test from 1 to 2 2 
+message sent from 10 to 11: test from 1 to 2 2 
+message sent from 10 to 11: test from 1 to 2 2 
+message sent from 10 to 11: from 1 to 2
+message sent from 10 to 11: from 1 to 2
+message sent from 11 to 10: test from 2 to 1
+message sent from 10 to 11: test from 1 to 2
+message sent from 11 to 10: response to test from 1 to 2
