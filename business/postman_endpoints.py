@@ -12,14 +12,16 @@ import atexit
 import json
 from flask_cors import CORS
 import jwt
+from flask_socketio import SocketIO,emit
 
 template_dir = os.path.abspath('../templates/')
 app = Flask(__name__,template_folder=template_dir,static_folder='static')
 app.config['SESSION_TYPE'] = 'filesystem'
 app.secret_key ="abc123"
-CORS(app, origins=['http://localhost:3000'])
-
+#CORS(app, origins=['http://localhost:3000'])
+CORS(app,resources={r"/*":{"origins":"*"}})
 active_users=[]
+socketio = SocketIO(app,cors_allowed_origins="*")
 
 #app.use_static_folder('static')
 
@@ -85,7 +87,6 @@ def login():
 
 
 @app.route('/logout', methods=['POST'])
-#@login_required
 def logout():
     token = request.headers.get('Authorization')
     print(token)
@@ -107,7 +108,6 @@ def get_users():
     response = {'users': user_list}
     return jsonify(response)
 
-
 @app.route('/generate-message-graph', methods=['GET'])
 def generate_graph():
     graph_dict = lib.generate_message_graph(db)
@@ -119,21 +119,25 @@ def generate_graph():
     ax.set_ylabel('Number of messages sent')
     ax.set_title('Message graph')
     fig.savefig('message_graph.png')
-    return send_file('message_graph.png',mimetype='image/png')
+    return send_file('message_graph.png', mimetype='image/png')
 
-@app.route('/messages-for-user/<username>', methods=['GET'])
-def get_messages_for_user(username):
+@app.route('/messages-for-user', methods=['GET'])
+def get_messages_for_user():
+    print('username')
+    username = request.headers.get('username')
+    print(username)
     messages_for_user = lib.get_all_user_messages(username,db)
-    response = {'user' : username, 
-                'messages' : messages_for_user}
+    print(messages_for_user)
+    response = {'user' : username, 'messages' : messages_for_user}
     return jsonify(response)
 
-@app.route('/load_messages/<username>')
-def load_messages(username):
-    # Load messages for specified user from database
-    messages = lib.get_message(username,current_user.username,db)   
-    messages_json = json.dumps(messages)
-    return messages_json
+@app.route('/load-messages', methods=['GET'])
+def load_messages():
+    username = request.headers.get('username')
+    print(username)
+    messages = lib.get_message(username,username,db)   
+    #messages_json = json.dumps(messages)
+    return jsonify(messages)
 
 @app.route('/create-user', methods=['POST'])
 def create_user():
@@ -171,8 +175,12 @@ def update_password(username,oldpassword,newpassword):
     }
     return jsonify(response)
 
-@app.route('/messages-between/<userone>/<usertwo>', methods=['GET'])
-def get_messages_between(userone,usertwo):
+@app.route('/messages-between', methods=['GET'])
+def get_messages_between():
+    userone = request.headers.get('userone')
+    usertwo = request.headers.get('usertwo')
+    print("userone "  + userone)
+    print("usertwo " + usertwo)
     messages = lib.get_message(userone,usertwo,db)
     response={
         'userone':userone,
@@ -181,15 +189,24 @@ def get_messages_between(userone,usertwo):
     } 
     return jsonify(response)
 
-@app.route('/send-message/<fromuser_send>/<touser_send>/<text_send>', methods=['POST'])
-def send_message(fromuser_send, touser_send, text_send):
+@app.route('/send-message', methods=['POST'])
+def send_message():
+    fromuser_send=request.headers.get('sender')
+    touser_send=request.headers.get('receiver')
+    text_send=request.headers.get('content')
     lib.http_send_message(touser_send,fromuser_send,text_send,db)
     response={
         'from-user':fromuser_send,
         'to-user':touser_send,
         'message': text_send
     }
+    response = {
+        'type': 'pull-request',
+        'users': [fromuser_send,touser_send]
+    }
+    socketio.emit('data_response',{'type' : 'ask-for-messages', 'from' : fromuser_send, 'to' : touser_send})
     return jsonify(response)
+
 
 @app.route('/delete-user', methods=['POST'])
 def delete_user():
@@ -216,4 +233,4 @@ def admin_change_password():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    socketio.run(app,debug=True, port=8000)

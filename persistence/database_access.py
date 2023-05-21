@@ -47,11 +47,24 @@ class Database_access():
     def get_user_messages(self,fromuser, touser):
         with sqlite3.connect('D:/andrei/AN3/SEM2/SD/ChatApp/persistence/chatapp.db') as conn:
             messages=conn.execute(self.get_convo_statement, (fromuser, touser, touser, fromuser)).fetchall()
-            return [(self.get_username_by_id(message[0]),message[1]) for message in messages]
+            array = [(self.get_username_by_id(message[0]),message[1]) for message in messages]
+            if array:
+                return [(self.get_username_by_id(message[0]),message[1]) for message in messages]
+            else:
+                return [('test','test')]
         
-    def get_username_by_id(self,id):
+    def get_username_by_id(self, id):
         with sqlite3.connect('D:/andrei/AN3/SEM2/SD/ChatApp/persistence/chatapp.db') as conn:
-            return conn.execute(self.get_username_by_id_statement,(id,)).fetchone()[0]
+            fetchd = conn.execute(self.get_username_by_id_statement, (id,))
+            if fetchd is not None:
+                result = fetchd.fetchone()
+                if result is not None:
+                    username = result[0]
+                else:
+                    username = 'Deleted'
+            else:
+                username = 'Not found'
+            return username
              
     def test(self):
         with sqlite3.connect('D:/andrei/AN3/SEM2/SD/ChatApp/persistence/chatapp.db') as conn:
@@ -101,6 +114,7 @@ class Database_access():
             cursor = conn.execute(self.get_report_statement, (username, username))
             rows = cursor.fetchall()
             report_dict = {
+                'id' : 0,
                 'sender': [],
                 'receiver': [],
                 'text_content': []
@@ -111,7 +125,11 @@ class Database_access():
                 report_dict['sender'].append(sender_username)
                 report_dict['receiver'].append(receiver_username)
                 report_dict['text_content'].append(row[2])
-            return report_dict
+                report_dict['id'] = report_dict['id'] + 1
+            messages=[None] * report_dict['id']
+            for i in range(0,report_dict['id']):
+                messages[i] = {'id':i, 'sender':report_dict['sender'][i], 'receiver':report_dict['receiver'][i],'text':report_dict['text_content'][i]}
+            return messages
         
     def count_sender_messages(self, username):
         with sqlite3.connect('D:/andrei/AN3/SEM2/SD/ChatApp/persistence/chatapp.db') as conn:

@@ -15,6 +15,7 @@ function EditUserModal(props){
 
     const handleUserSelect = (user) => {
         setSelectedUser(user);
+        console.log("test " + selectedUser);
         console.log("selected user " + user);
     };
 

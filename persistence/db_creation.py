@@ -28,6 +28,6 @@ with con:
     #con.execute('INSERT INTO "user" (username, hashed_password, email, type, logged_on) values(?,?,?,?,?)',("user3",hashlib.sha256("user3".encode('utf-8')).hexdigest(),"user3@email.com","user","false"))
     #con.execute('INSERT INTO "user" (username, hashed_password, email, type, logged_on) values(?,?,?,?,?)',("user4",hashlib.sha256("user4".encode('utf-8')).hexdigest(),"user4@email.com","user","false"))
     #con.execute('DELETE FROM message')
-    con.execute("DELETE FROM user WHERE username='test_mail'")
+    #con.execute("DELETE FROM user WHERE username='test_mail'")
     #con.execute('INSERT INTO message (receiver_id, sender_id, image_content, text_content) values (?,?,?,?)')
     #con.execute('INSERT INTO "user" (username, hashed_password, email, type, logged_on) values(?,?,?,?,?)',("admin",hashlib.sha256("admin".encode('utf-8')).hexdigest(),"admin@admin.com","admin","false"))

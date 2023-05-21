@@ -25,6 +25,7 @@ function Login() {
             .then(response => {
                 sessionStorage.setItem('token', response.data.token);
                 sessionStorage.setItem('is_admin', response.data.is_admin);
+                sessionStorage.setItem('logged-in-as', username);
                 console.log("TOKEN " + response.data.token);
                 console.log("IS ADMIN " + response.data.is_admin);
                 if(response.data.is_admin == true)
